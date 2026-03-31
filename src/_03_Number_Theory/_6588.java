@@ -4,17 +4,22 @@ import java.io.*;
 import java.util.*;
 
 public class _6588 {
-    public static boolean isprime(int n){
-        if (n < 2) return false;
-        for (int i = 2; i*i <= n; i++) {
-            if (n % i == 0) return false;
+    public static boolean[] isNotPrime = new boolean[1000001]; //에라토스체를 위한... 최대치 배열
+
+    public static void calculate_prime() {
+        isNotPrime[0] = isNotPrime[1] = true;
+        for (int i = 2; i * i <= 1000000; i++) {
+            if (!isNotPrime[i]) { //i가 소수면 i의 배수는 모두 소수가 아니니깐 ture
+                for (int j = i * i; j <= 1000000; j += i) {
+                    isNotPrime[j] = true;
+                }
+            }
         }
-        return true;
     }
 
     public static String test(int n) {
         for (int i = 3; i <= n / 2; i += 2) {
-            if (isprime(i) && isprime(n - i)) {
+            if (!isNotPrime[i] && !isNotPrime[n - i]) {
                 return n + " = " + i + " + " + (n - i) + "\n";
             }
         }
@@ -22,6 +27,7 @@ public class _6588 {
     }
 
     public static void main(String[] args) throws IOException {
+        calculate_prime();
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringBuilder sb = new StringBuilder();
         while (true) {
@@ -29,9 +35,7 @@ public class _6588 {
             if (s == null || s.equals("0")) break;
             int n = Integer.parseInt(s);
 
-            if (n >= 6 && (n % 2) == 0) {
-                sb.append(test(n));
-            }
+            sb.append(test(n));
 
         }
         System.out.println(sb);
